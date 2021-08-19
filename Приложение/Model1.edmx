@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище AquaparkModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Абонимент">
+          <Key>
+            <PropertyRef Name="id_абонимента" />
+          </Key>
+          <Property Name="id_абонимента" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_клиента" Type="int" />
+          <Property Name="Дата_регистрации" Type="date" Nullable="false" />
+          <Property Name="Дата_окончания" Type="date" Nullable="false" />
+          <Property Name="Взрослый" Type="bit" Nullable="false" />
+          <Property Name="Детский" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Аквапарк">
+          <Key>
+            <PropertyRef Name="id_аквапарка" />
+          </Key>
+          <Property Name="id_аквапарка" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_абонимента" Type="int" Nullable="false" />
+          <Property Name="id_места" Type="int" Nullable="false" />
+          <Property Name="id_типа" Type="int" />
+          <Property Name="Страна" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Город" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Улица" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Дом" Type="int" Nullable="false" />
+          <Property Name="Название" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Обслуживание_инвалидов" Type="bit" />
+        </EntityType>
+        <EntityType Name="Клиент">
+          <Key>
+            <PropertyRef Name="id_клиента" />
+          </Key>
+          <Property Name="id_клиента" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Фамилия" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Имя" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Отчество" Type="varchar" MaxLength="20" />
+          <Property Name="Дата_рождения" Type="date" Nullable="false" />
+          <Property Name="Гражданство" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Место_работы">
+          <Key>
+            <PropertyRef Name="id_места" />
+          </Key>
+          <Property Name="id_места" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_работника" Type="int" />
+          <Property Name="Сектор" Type="varchar" MaxLength="50" />
+          <Property Name="Аттракцион" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Работник">
+          <Key>
+            <PropertyRef Name="id_работника" />
+          </Key>
+          <Property Name="id_работника" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Фамилия" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Имя" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Отчество" Type="varchar" MaxLength="20" />
+          <Property Name="Дата_рождения" Type="date" Nullable="false" />
+          <Property Name="Должность" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Тип_аквапарка">
+          <Key>
+            <PropertyRef Name="id_типа" />
+          </Key>
+          <Property Name="id_типа" Type="int" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="50" />
+          <Property Name="Описание" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <Association Name="FK_Абонимент_Клиент">
+          <End Role="Клиент" Type="Self.Клиент" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Абонимент" Type="Self.Абонимент" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Клиент">
+              <PropertyRef Name="id_клиента" />
+            </Principal>
+            <Dependent Role="Абонимент">
+              <PropertyRef Name="id_клиента" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Аквапарк_Абонимент">
+          <End Role="Абонимент" Type="Self.Абонимент" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Аквапарк" Type="Self.Аквапарк" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Абонимент">
+              <PropertyRef Name="id_абонимента" />
+            </Principal>
+            <Dependent Role="Аквапарк">
+              <PropertyRef Name="id_абонимента" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Аквапарк_Место_работы">
+          <End Role="Место_работы" Type="Self.Место_работы" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Аквапарк" Type="Self.Аквапарк" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Место_работы">
+              <PropertyRef Name="id_места" />
+            </Principal>
+            <Dependent Role="Аквапарк">
+              <PropertyRef Name="id_места" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Аквапарк_Тип_аквапарка">
+          <End Role="Тип_аквапарка" Type="Self.Тип_аквапарка" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Аквапарк" Type="Self.Аквапарк" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Тип_аквапарка">
+              <PropertyRef Name="id_типа" />
+            </Principal>
+            <Dependent Role="Аквапарк">
+              <PropertyRef Name="id_типа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Место_работы_Работник">
+          <End Role="Работник" Type="Self.Работник" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Место_работы" Type="Self.Место_работы" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Работник">
+              <PropertyRef Name="id_работника" />
+            </Principal>
+            <Dependent Role="Место_работы">
+              <PropertyRef Name="id_работника" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище AquaparkModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Абонимент" EntityType="Self.Абонимент" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Аквапарк" EntityType="Self.Аквапарк" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Клиент" EntityType="Self.Клиент" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Место_работы" EntityType="Self.Место_работы" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Работник" EntityType="Self.Работник" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Тип_аквапарка" EntityType="Self.Тип_аквапарка" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Абонимент_Клиент" Association="Self.FK_Абонимент_Клиент">
+            <End Role="Клиент" EntitySet="Клиент" />
+            <End Role="Абонимент" EntitySet="Абонимент" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Аквапарк_Абонимент" Association="Self.FK_Аквапарк_Абонимент">
+            <End Role="Абонимент" EntitySet="Абонимент" />
+            <End Role="Аквапарк" EntitySet="Аквапарк" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Аквапарк_Место_работы" Association="Self.FK_Аквапарк_Место_работы">
+            <End Role="Место_работы" EntitySet="Место_работы" />
+            <End Role="Аквапарк" EntitySet="Аквапарк" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Аквапарк_Тип_аквапарка" Association="Self.FK_Аквапарк_Тип_аквапарка">
+            <End Role="Тип_аквапарка" EntitySet="Тип_аквапарка" />
+            <End Role="Аквапарк" EntitySet="Аквапарк" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Место_работы_Работник" Association="Self.FK_Место_работы_Работник">
+            <End Role="Работник" EntitySet="Работник" />
+            <End Role="Место_работы" EntitySet="Место_работы" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AquaparkModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Абонимент">
+          <Key>
+            <PropertyRef Name="id_абонимента" />
+          </Key>
+          <Property Name="id_абонимента" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_клиента" Type="Int32" />
+          <Property Name="Дата_регистрации" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Дата_окончания" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Взрослый" Type="Boolean" Nullable="false" />
+          <Property Name="Детский" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Клиент" Relationship="Self.FK_Абонимент_Клиент" FromRole="Абонимент" ToRole="Клиент" />
+          <NavigationProperty Name="Аквапарк" Relationship="Self.FK_Аквапарк_Абонимент" FromRole="Абонимент" ToRole="Аквапарк" />
+        </EntityType>
+        <EntityType Name="Аквапарк">
+          <Key>
+            <PropertyRef Name="id_аквапарка" />
+          </Key>
+          <Property Name="id_аквапарка" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_абонимента" Type="Int32" Nullable="false" />
+          <Property Name="id_места" Type="Int32" Nullable="false" />
+          <Property Name="id_типа" Type="Int32" />
+          <Property Name="Страна" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Город" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Улица" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Дом" Type="Int32" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Обслуживание_инвалидов" Type="Boolean" />
+          <NavigationProperty Name="Абонимент" Relationship="Self.FK_Аквапарк_Абонимент" FromRole="Аквапарк" ToRole="Абонимент" />
+          <NavigationProperty Name="Место_работы" Relationship="Self.FK_Аквапарк_Место_работы" FromRole="Аквапарк" ToRole="Место_работы" />
+          <NavigationProperty Name="Тип_аквапарка" Relationship="Self.FK_Аквапарк_Тип_аквапарка" FromRole="Аквапарк" ToRole="Тип_аквапарка" />
+        </EntityType>
+        <EntityType Name="Клиент">
+          <Key>
+            <PropertyRef Name="id_клиента" />
+          </Key>
+          <Property Name="id_клиента" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Фамилия" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Отчество" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Дата_рождения" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Гражданство" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Абонимент" Relationship="Self.FK_Абонимент_Клиент" FromRole="Клиент" ToRole="Абонимент" />
+        </EntityType>
+        <EntityType Name="Место_работы">
+          <Key>
+            <PropertyRef Name="id_места" />
+          </Key>
+          <Property Name="id_места" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_работника" Type="Int32" />
+          <Property Name="Сектор" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Аттракцион" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Аквапарк" Relationship="Self.FK_Аквапарк_Место_работы" FromRole="Место_работы" ToRole="Аквапарк" />
+          <NavigationProperty Name="Работник" Relationship="Self.FK_Место_работы_Работник" FromRole="Место_работы" ToRole="Работник" />
+        </EntityType>
+        <EntityType Name="Работник">
+          <Key>
+            <PropertyRef Name="id_работника" />
+          </Key>
+          <Property Name="id_работника" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Фамилия" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Отчество" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Дата_рождения" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Должность" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Место_работы" Relationship="Self.FK_Место_работы_Работник" FromRole="Работник" ToRole="Место_работы" />
+        </EntityType>
+        <EntityType Name="Тип_аквапарка">
+          <Key>
+            <PropertyRef Name="id_типа" />
+          </Key>
+          <Property Name="id_типа" Type="Int32" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Описание" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Аквапарк" Relationship="Self.FK_Аквапарк_Тип_аквапарка" FromRole="Тип_аквапарка" ToRole="Аквапарк" />
+        </EntityType>
+        <Association Name="FK_Абонимент_Клиент">
+          <End Role="Клиент" Type="Self.Клиент" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Абонимент" Type="Self.Абонимент" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Клиент">
+              <PropertyRef Name="id_клиента" />
+            </Principal>
+            <Dependent Role="Абонимент">
+              <PropertyRef Name="id_клиента" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Аквапарк_Абонимент">
+          <End Role="Абонимент" Type="Self.Абонимент" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Аквапарк" Type="Self.Аквапарк" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Абонимент">
+              <PropertyRef Name="id_абонимента" />
+            </Principal>
+            <Dependent Role="Аквапарк">
+              <PropertyRef Name="id_абонимента" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Аквапарк_Место_работы">
+          <End Role="Место_работы" Type="Self.Место_работы" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Аквапарк" Type="Self.Аквапарк" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Место_работы">
+              <PropertyRef Name="id_места" />
+            </Principal>
+            <Dependent Role="Аквапарк">
+              <PropertyRef Name="id_места" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Аквапарк_Тип_аквапарка">
+          <End Role="Тип_аквапарка" Type="Self.Тип_аквапарка" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Аквапарк" Type="Self.Аквапарк" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Тип_аквапарка">
+              <PropertyRef Name="id_типа" />
+            </Principal>
+            <Dependent Role="Аквапарк">
+              <PropertyRef Name="id_типа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Место_работы_Работник">
+          <End Role="Работник" Type="Self.Работник" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Место_работы" Type="Self.Место_работы" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Работник">
+              <PropertyRef Name="id_работника" />
+            </Principal>
+            <Dependent Role="Место_работы">
+              <PropertyRef Name="id_работника" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AquaparkEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Абонимент" EntityType="Self.Абонимент" />
+          <EntitySet Name="Аквапарк" EntityType="Self.Аквапарк" />
+          <EntitySet Name="Клиент" EntityType="Self.Клиент" />
+          <EntitySet Name="Место_работы" EntityType="Self.Место_работы" />
+          <EntitySet Name="Работник" EntityType="Self.Работник" />
+          <EntitySet Name="Тип_аквапарка" EntityType="Self.Тип_аквапарка" />
+          <AssociationSet Name="FK_Абонимент_Клиент" Association="Self.FK_Абонимент_Клиент">
+            <End Role="Клиент" EntitySet="Клиент" />
+            <End Role="Абонимент" EntitySet="Абонимент" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Аквапарк_Абонимент" Association="Self.FK_Аквапарк_Абонимент">
+            <End Role="Абонимент" EntitySet="Абонимент" />
+            <End Role="Аквапарк" EntitySet="Аквапарк" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Аквапарк_Место_работы" Association="Self.FK_Аквапарк_Место_работы">
+            <End Role="Место_работы" EntitySet="Место_работы" />
+            <End Role="Аквапарк" EntitySet="Аквапарк" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Аквапарк_Тип_аквапарка" Association="Self.FK_Аквапарк_Тип_аквапарка">
+            <End Role="Тип_аквапарка" EntitySet="Тип_аквапарка" />
+            <End Role="Аквапарк" EntitySet="Аквапарк" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Место_работы_Работник" Association="Self.FK_Место_работы_Работник">
+            <End Role="Работник" EntitySet="Работник" />
+            <End Role="Место_работы" EntitySet="Место_работы" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище AquaparkModelContainer" CdmEntityContainer="AquaparkEntities2">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="AquaparkModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Абонимент">
+            <EntityTypeMapping TypeName="AquaparkModel.Абонимент">
+              <MappingFragment StoreEntitySet="Абонимент">
+                <ScalarProperty Name="id_абонимента" ColumnName="id_абонимента" />
+                <ScalarProperty Name="id_клиента" ColumnName="id_клиента" />
+                <ScalarProperty Name="Дата_регистрации" ColumnName="Дата_регистрации" />
+                <ScalarProperty Name="Дата_окончания" ColumnName="Дата_окончания" />
+                <ScalarProperty Name="Взрослый" ColumnName="Взрослый" />
+                <ScalarProperty Name="Детский" ColumnName="Детский" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Аквапарк">
+            <EntityTypeMapping TypeName="AquaparkModel.Аквапарк">
+              <MappingFragment StoreEntitySet="Аквапарк">
+                <ScalarProperty Name="id_аквапарка" ColumnName="id_аквапарка" />
+                <ScalarProperty Name="id_абонимента" ColumnName="id_абонимента" />
+                <ScalarProperty Name="id_места" ColumnName="id_места" />
+                <ScalarProperty Name="id_типа" ColumnName="id_типа" />
+                <ScalarProperty Name="Страна" ColumnName="Страна" />
+                <ScalarProperty Name="Город" ColumnName="Город" />
+                <ScalarProperty Name="Улица" ColumnName="Улица" />
+                <ScalarProperty Name="Дом" ColumnName="Дом" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Обслуживание_инвалидов" ColumnName="Обслуживание_инвалидов" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Клиент">
+            <EntityTypeMapping TypeName="AquaparkModel.Клиент">
+              <MappingFragment StoreEntitySet="Клиент">
+                <ScalarProperty Name="id_клиента" ColumnName="id_клиента" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="Дата_рождения" ColumnName="Дата_рождения" />
+                <ScalarProperty Name="Гражданство" ColumnName="Гражданство" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Место_работы">
+            <EntityTypeMapping TypeName="AquaparkModel.Место_работы">
+              <MappingFragment StoreEntitySet="Место_работы">
+                <ScalarProperty Name="id_места" ColumnName="id_места" />
+                <ScalarProperty Name="id_работника" ColumnName="id_работника" />
+                <ScalarProperty Name="Сектор" ColumnName="Сектор" />
+                <ScalarProperty Name="Аттракцион" ColumnName="Аттракцион" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Работник">
+            <EntityTypeMapping TypeName="AquaparkModel.Работник">
+              <MappingFragment StoreEntitySet="Работник">
+                <ScalarProperty Name="id_работника" ColumnName="id_работника" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="Дата_рождения" ColumnName="Дата_рождения" />
+                <ScalarProperty Name="Должность" ColumnName="Должность" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Тип_аквапарка">
+            <EntityTypeMapping TypeName="AquaparkModel.Тип_аквапарка">
+              <MappingFragment StoreEntitySet="Тип_аквапарка">
+                <ScalarProperty Name="id_типа" ColumnName="id_типа" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Описание" ColumnName="Описание" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
